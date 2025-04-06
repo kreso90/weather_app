@@ -1,24 +1,31 @@
 import React from 'react'
 import Loader from './Loader';
 import useWeather from '@/hooks/useWeather';
+import { LuMapPin } from "react-icons/lu";
 
 export default function GetPlaces() {
-    const { city, citiesList, loadingWeather, handleCityChange, handleSelectCity } = useWeather(); 
+  const { city, citiesList, loadingWeather, handleCityChange, handleSelectCity } = useWeather(); 
 
-    return (
-        <div>
-            <label htmlFor="city">GetPlaces</label>
-            <input type="text" id="city" onChange={handleCityChange} value={city}/>
-            {citiesList && (
-            <div className="dropdown">
-                {Object.entries(citiesList).map(([key, city]) => (
-                <div key={key} className="dropdown-item" onClick={() => handleSelectCity(city.name)}>
-                    {city.name}
-                </div>
-                ))}
-            </div>
-            )}
+  return (
+    <>
+      <div className="relativ">
 
+        <div className="input-icon">
+          <LuMapPin  size={20}/>
         </div>
+        <input type="text" id="city" onChange={handleCityChange} value={city}/>
+          
+        {citiesList.length > 0 && (
+          <ul className="dropdown">
+              {Object.entries(citiesList).map(([key, place]) => (
+              <li key={key} className="dropdown-item" onClick={() => handleSelectCity(place.name)}>
+                  {place.name}, {place.country}
+              </li>
+              ))}
+          </ul>
+        )}
+      </div>
+
+    </>
     )
 }
