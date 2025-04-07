@@ -211,7 +211,7 @@ input{
 
 .sunny{background-image: url('../../public/sunny.png');}
 .snow{background-image: url('../../public/snow.png');}
-.rain{background-image: url('../../public/rain.png');}
+.rainy{background-image: url('../../public/rain.png');}
 .cloudy{background-image: url('../../public/cloudy.png');}
 
 .bg-wrapper::after{
