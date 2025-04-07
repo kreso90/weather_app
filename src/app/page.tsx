@@ -118,7 +118,8 @@ export default function Home() {
                     <div className={dayIndex == 0 ? 'wrapper wrapper--grey' : 'wrapper'}>
                       <span>{formatDay(day.date_epoch)}</span>
                       <small>{formatDate(day.date)}</small>
-                      <p>{Math.floor(day.day.avgtemp_c)}°</p>
+                      <p>{Math.floor(day.day.maxtemp_c)}°</p>
+                      <small>{Math.floor(day.day.mintemp_c)}°</small>
                       <img src={day.day.condition.icon} alt={day.day.condition.text} />
                     </div>
                   </div>
