@@ -1,6 +1,7 @@
 "use client";
 import useWeather from "@/hooks/useWeather";
 import GetPlaces from "./components/GetPlaces";
+import { getHourFromEpoch, getNextHours, formatDay, formatDate, formatTime, getUvLabel, getWeatherClass } from "@/utils/weatherUtils";
 import {
   LuWind,
   LuCalendar,
@@ -10,16 +11,10 @@ import {
   LuDroplets,
   LuEye,
 } from "react-icons/lu";
+import DataBox from "./components/DataBox";
 
 export default function Home() {
   const {
-    getWeatherClass,
-    getNextHours,
-    formatTime,
-    formatDay,
-    formatDate,
-    getUvLabel,
-    weatherClass,
     loadingWeather,
     weatherData,
     error,
@@ -41,55 +36,45 @@ export default function Home() {
               <div className="bg-wrapper__content">
                 <h1 className="m-0 m-bottom-30">
                   {weatherData?.location?.name ?? "Please select city"}
+                  {weatherData?.location?.country ? `, ${weatherData.location.country}` : ""}
                 </h1>
 
                 <div className="text-center m-bottom-50">
-                  <p className="temp-font">{Math.floor(weatherData?.current.temp_c ?? 0)}°</p>
+                  <div className="current-temp">
+                    <p className="temp-font">{Math.floor(weatherData?.current.temp_c ?? 0)}°</p>
+                    <img src={weatherData?.current.condition.icon} alt={weatherData?.current.condition.text} />
+                  </div>
                   <p className="font-28 m-0">
                     {weatherData?.current.condition.text}
                   </p>
                 </div>
 
                 <div className="box-container">
-                  <div className="box">
-                    <div className="box__title">
-                      <LuThermometer size={22} />
-                      Feels like
-                    </div>
-                    <div className="box__content">
-                      {Math.floor(weatherData?.current.feelslike_c ?? 0)}°
-                    </div>
-                  </div>
 
-                  <div className="box">
-                    <div className="box__title">
-                      <LuDroplet size={22} />
-                      Precipitation
-                    </div>
-                    <div className="box__content">
-                      {Math.floor(weatherData?.current.precip_mm  ?? 0)} mm
-                    </div>
-                  </div>
+                  <DataBox 
+                    icon={LuThermometer} 
+                    title="Feels like" 
+                    dataNumber={`${Math.floor(weatherData?.current.feelslike_c ?? 0)}°`}
+                  />
+             
+                  <DataBox 
+                    icon={LuDroplet} 
+                    title="Precipitation" 
+                    dataNumber={`${Math.floor(weatherData?.current.precip_mm  ?? 0)} mm`}
+                  />
 
-                  <div className="box">
-                    <div className="box__title">
-                      <LuEye size={22} />
-                      Visibility
-                    </div>
-                    <div className="box__content">
-                      {Math.floor(weatherData?.current.vis_km ?? 0)} km
-                    </div>
-                  </div>
+                  <DataBox 
+                    icon={LuEye} 
+                    title="Visibility" 
+                    dataNumber={`${Math.floor(weatherData?.current.vis_km ?? 0)} km`}
+                  />
 
-                  <div className="box">
-                    <div className="box__title">
-                      <LuDroplets size={22} />
-                      Humidity
-                    </div>
-                    <div className="box__content">
-                      {Math.floor(weatherData?.current.humidity ?? 0 )}%
-                    </div>
-                  </div>
+                  <DataBox 
+                    icon={LuDroplets} 
+                    title="Humidity" 
+                    dataNumber={`${Math.floor(weatherData?.current.humidity ?? 0)} %`}
+                  />
+
                 </div>
               </div>
             </div>
@@ -104,18 +89,20 @@ export default function Home() {
               </div>
 
               <div className="box__inner-container">
-                {getNextHours(
-                  weatherData?.forecast.forecastday[0]?.hour || [],
-                  10
-                ).map((hour, hourIndex) => (
-                  <div key={hourIndex} className="col xs-4 md-2 text-center m-bottom-20">
-                    <div className={hourIndex == 0 ? 'wrapper wrapper--grey' : 'wrapper'}>
-                      <span>{formatTime(hour.time)}</span>
-                      <p>{Math.floor(hour.temp_c)}°</p>
-                      <img src={hour.condition.icon} alt={hour.condition.text} />
-                    </div>
+              {getNextHours(
+                getHourFromEpoch(weatherData?.location.localtime_epoch ?? 0),
+                weatherData?.forecast.forecastday[0]?.hour || [],
+                10,
+                weatherData?.forecast.forecastday || []
+              ).map((hour, hourIndex) => (
+                <div key={hourIndex} className="col xs-4 md-2 text-center m-bottom-20">
+                  <div className={hourIndex === 0 ? 'wrapper wrapper--grey' : 'wrapper'}>
+                    <span>{formatTime(hour.time)}</span>
+                    <p>{Math.floor(hour.temp_c)}°</p>
+                    <img src={hour.condition.icon} alt={hour.condition.text} />
                   </div>
-                ))}
+                </div>
+              ))}
               </div>
             </div>
 
@@ -150,12 +137,12 @@ export default function Home() {
                   
                   <div className="m-top-20 m-bottom-20">
                     <p className="font-26 m-0 m-bottom-5">{Math.floor(weatherData?.current.uv ?? 0)}</p>
-                    <p className="font-20 m-0">{getUvLabel(weatherData?.current.uv ?? 0)}</p>
+                    <p className="font-20 m-0">{getUvLabel(Math.floor(weatherData?.current.uv ?? 0))}</p>
                   </div>
                   
                   <div className="relativ">
                     <div className="uv"></div>
-                    <div className="uv-dot" style={{left: `${weatherData?.current.uv ?? 0}%`,}}></div>
+                    <div className="uv-dot" style={{left: `${Math.floor(Number((weatherData?.current.uv ?? 0) * 10))}%`,}}></div>
                   </div>
 
                 

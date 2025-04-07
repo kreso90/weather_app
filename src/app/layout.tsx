@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { Roboto } from "next/font/google";
+import { Montserrat } from "next/font/google";
 import { ReduxProvider } from "@/redux/provider";
 
-const roboto = Roboto({
-  weight: ['400', '600', '700'],
+const montserrat = Montserrat({
+  weight: ['400', '500', '600', '700'],
   subsets: ['latin'],
-  variable: '--font-roboto',
+  variable: '--font-montserrat',
 })
 
 export const metadata: Metadata = {
@@ -21,7 +21,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={roboto.className}>
+      <body className={montserrat.className}>
         <ReduxProvider>
           {children}
         </ReduxProvider>
