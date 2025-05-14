@@ -19,7 +19,7 @@ export default function Home() {
     weatherData,
     error,
   } = useWeather();
-
+  
   return (
     <main
       className={getWeatherClass(weatherData?.current.condition.code ?? 1000)}
@@ -109,11 +109,11 @@ export default function Home() {
             <div className="box m-bottom-20">
               <div className="box__title box__title--border">
                 <LuCalendar  size={22} />
-                7 day forecast
+                {weatherData?.forecast.forecastday.length} day forecast
               </div>
 
               <div className="box__inner-container">
-                {weatherData?.forecast.forecastday.slice(0, 10).map((day, dayIndex) => (
+                {weatherData?.forecast.forecastday.slice(0, 7).map((day, dayIndex) => (
                   <div key={dayIndex} className="col xs-4 md-2 text-center m-bottom-20">
                     <div className={dayIndex == 0 ? 'wrapper wrapper--grey' : 'wrapper'}>
                       <span>{formatDay(day.date_epoch)}</span>
